@@ -1,0 +1,1 @@
+export const API_URL = "https://fakegram-32cea.firebaseio.com";

@@ -1,14 +1,18 @@
 import React from 'react';
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-import Home from "../pages/Home";
+import Feed from "../pages/Feed";
+import Login from "../pages/Login";
+import LayoutRoute from "./LayoutRoute";
+import Footer from "../components/Footer/Footer";
 
 const AppRouter = () => (
     <Router>
         <Switch>
             <Route exact path="/">
-                <Redirect to="/home"/>
+                <Redirect to="/feed"/>
             </Route>
-            <Route path="/home" component={Home}/>
+            <LayoutRoute path="/feed" component={Feed} footer={Footer}/>
+            <LayoutRoute path="/login" component={Login}/>
         </Switch>
     </Router>
 );
