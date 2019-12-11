@@ -7,6 +7,8 @@ import Typography from "@material-ui/core/Typography";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 
+import firebase from "firebase";
+
 const useStyles = makeStyles(theme => ({
     avatarLarge: {
         width: 50,
@@ -34,16 +36,26 @@ const Profile = () => {
         photoURL: ""
     });
 
-    useEffect(() =>{
+    const [userPosts, setUserPosts] = useState([]);
+
+    useEffect(() => {
         setUser(localStorageGetItem("user"));
-    },[]);
+
+        firebase.database().ref("posts").on("value", snap => {
+            let objDB = snap.val();
+
+            setUserPosts(Object.keys(objDB).map(key => {
+                return objDB[key];
+            }));
+        });
+    }, []);
 
     return (
         <Grid container>
             <Grid container item xs={12} style={{height: "15%"}}>
                 <Grid item xs={4}>
                     <Grid container item xs={12} justify="center">
-                        <Avatar alt="Remy Sharp" src={user.photoURL} className={classes.avatarLarge} />
+                        <Avatar alt="Remy Sharp" src={user.photoURL} className={classes.avatarLarge}/>
                     </Grid>
                     <Grid container item xs={12} justify="center">
                         <Typography variant="subtitle1" gutterBottom>
@@ -93,11 +105,9 @@ const Profile = () => {
             <Grid item xs={12} style={{height: "85%"}}>
                 <div className={classes.root}>
                     <GridList cellHeight={160} className={classes.gridList} cols={3}>
-                        {["https://loremflickr.com/600/600",
-                            "https://loremflickr.com/600/600",
-                            "https://loremflickr.com/600/600"].map(tile => (
-                            <GridListTile key={tile.img} cols={tile.cols || 1}>
-                                <img src={tile} alt="" />
+                        {userPosts.map((post, index) => (
+                            <GridListTile key={index} cols={1}>
+                                <img src={post.imageUrl} alt=""/>
                             </GridListTile>
                         ))}
                     </GridList>
