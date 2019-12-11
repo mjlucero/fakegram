@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import firebase from "firebase";
@@ -33,11 +33,17 @@ const useStyles = makeStyles(theme => ({
 const Login = () => {
     const classes = useStyles();
 
-    useEffect(() =>{
+    useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            saveInLocalStorage("user", user)
+            const {displayName, email, photoURL} = user;
+
+            saveInLocalStorage("user", {
+                displayName,
+                email,
+                photoURL
+            })
         });
-    },[]);
+    }, []);
 
     const handleAuth = () => {
         const provider = new firebase.auth.GoogleAuthProvider();
@@ -49,10 +55,10 @@ const Login = () => {
 
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
+            <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
+                    <LockOutlinedIcon/>
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Fakegram

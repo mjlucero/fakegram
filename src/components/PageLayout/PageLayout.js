@@ -1,6 +1,5 @@
 import React from 'react';
-import classes from './PageLayout.css';
-
+import './PageLayout.css';
 
 const PageLayout = ({children, footer, header}) => {
     const renderComponent = component => {
@@ -13,14 +12,14 @@ const PageLayout = ({children, footer, header}) => {
     };
 
     return (
-        <div className={classes.Main}>
-            <div className={classes.Header}>
+        <div className="main-container">
+            <div className="header">
                 {renderComponent(header)}
             </div>
-            <div id="mainContainer" className={classes.Content}>
+            <div className="content">
                 {children}
             </div>
-            <div className={classes.Footer}>
+            <div className="footer">
                 {renderComponent(footer)}
             </div>
         </div>

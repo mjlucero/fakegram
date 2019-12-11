@@ -1,15 +1,24 @@
-.Main{
-
+.main-container {
+    height: 100vh;
+    box-sizing: border-box;
 }
 
-.Footer{
-
+.footer{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-height: 10%;
 }
 
-.Content{
-
+.content{
+    width: 100%;
+    min-height: 80%;
+    padding: 5px 20px;
+    box-sizing: border-box;
+    display: flex;
 }
 
-.Header {
-
+.header {
+    width: 100%;
+    min-height: 10%;
 }
