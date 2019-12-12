@@ -33,7 +33,8 @@ const Profile = () => {
     const [user, setUser] = useState({
         displayName: "",
         email: "",
-        photoURL: ""
+        photoURL: "",
+        uid: ""
     });
 
     const [userPosts, setUserPosts] = useState([]);
@@ -41,12 +42,18 @@ const Profile = () => {
     useEffect(() => {
         setUser(localStorageGetItem("user"));
 
-        firebase.database().ref("posts").on("value", snap => {
+        /*firebase.database().ref("posts").on("value", snap => {
             let objDB = snap.val();
 
             setUserPosts(Object.keys(objDB).map(key => {
                 return objDB[key];
             }));
+        });*/
+
+        const dbRef = firebase.database().ref("posts");
+
+        dbRef.orderByChild("userId").equalTo("BWRhvPdUs4cwl4GbggDOj0sm9Ws2").on("child_added", (snap) => {
+            console.log(snap.val());
         });
     }, []);
 
@@ -67,7 +74,7 @@ const Profile = () => {
                     <Grid item xs={4}>
                         <Grid container item xs={12} justify="center">
                             <Typography variant="h6" gutterBottom>
-                                8
+                                {userPosts.length}
                             </Typography>
                         </Grid>
                         <Grid container item xs={12} justify="center">

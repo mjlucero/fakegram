@@ -1,4 +1,7 @@
 import React, {useEffect} from 'react';
+
+import PropTypes from "prop-types";
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +11,8 @@ import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import firebase from "firebase";
-import {saveInLocalStorage} from "../utils";
+import {localStorageGetItem, saveInLocalStorage} from "../utils";
+import {withRouter} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -30,18 +34,24 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Login = () => {
+const Login = props => {
+    const {history} = props;
     const classes = useStyles();
 
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            const {displayName, email, photoURL} = user;
+            if (!localStorageGetItem("user")) {
+                const {displayName, email, photoURL, uid} = user;
 
-            saveInLocalStorage("user", {
-                displayName,
-                email,
-                photoURL
-            })
+                saveInLocalStorage("user", {
+                    displayName,
+                    email,
+                    photoURL,
+                    uid
+                })
+            }
+
+            history.push("/");
         });
     }, []);
 
@@ -49,7 +59,21 @@ const Login = () => {
         const provider = new firebase.auth.GoogleAuthProvider();
 
         firebase.auth().signInWithPopup(provider)
-            .then(result => console.log(result.user.email))
+            .then(result => {
+                const {displayName, email, photoURL, uid} = result.user;
+
+                if (result.additionalUserInfo.isNewUser) {
+
+                }
+                saveInLocalStorage("user", {
+                    displayName,
+                    email,
+                    photoURL,
+                    uid
+                });
+
+                history.push("/");
+            })
             .catch(err => console.log(err.code, err.message))
     };
 
@@ -80,4 +104,8 @@ const Login = () => {
     );
 };
 
-export default Login;
+Login.propTypes = {
+    history: PropTypes.object
+};
+
+export default withRouter(Login);
